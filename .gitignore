@@ -72,3 +72,10 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# UE4 Project directories to ignore
+/Binaries/
+/DerivedDataCache/
+/Intermediate/
+/Saved/
+/Build/
