@@ -25,6 +25,10 @@ protected:
 	UStaticMesh* m_pMesh;
 	FTimerHandle m_TimerHandle;
 	float m_MinDistanceBetweenSplinePoints{30.f};
+	float m_MinDistanceBetweenActorPoints{ 50.f };
+	TArray<FVector> m_ActorLocations{};
+
+	void AddSplinePoint();
 
 public:	
 	// Called every frame
@@ -36,5 +40,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StopDrawing();
 
-	void AddSplinePoint();
+	UFUNCTION(BlueprintCallable)
+	TArray<FVector> GetPoinstAlongSpline(int amountOfActors);
 };

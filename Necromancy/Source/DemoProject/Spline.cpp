@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "Spline.h"
+#include "Containers/Array.h"
+#include "Containers/UnrealString.h"
 
 // Sets default values
 ASpline::ASpline()
@@ -59,7 +61,7 @@ void ASpline::AddMesh(int index)
 	//turn of collision
 	splineMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//set forward access
-	splineMesh->SetForwardAxis(ESplineMeshAxis::Y, true);
+	splineMesh->SetForwardAxis(ESplineMeshAxis::X, true);
 }
 
 // Called every frame
@@ -78,14 +80,27 @@ void ASpline::StopDrawing()
 	GetWorldTimerManager().ClearTimer(m_TimerHandle);
 }
 
+TArray<FVector> ASpline::GetPoinstAlongSpline(int amountOfActors)
+{
+	float totalLength = m_pSpline->GetSplineLength();
+	float distanceBetween = totalLength / float(amountOfActors - 1);
+
+	float currentDistance{};
+	for (int i{}; i < amountOfActors; ++i) {
+		FVector currentLocation = m_pSpline->GetLocationAtDistanceAlongSpline(currentDistance, ESplineCoordinateSpace::World);
+		m_ActorLocations.Add(currentLocation);
+		currentDistance += distanceBetween;
+	}
+
+	return m_ActorLocations;
+}
+
 void ASpline::AddSplinePoint()
 {
 	auto playerController = GetWorld()->GetFirstPlayerController();
-	
-	//Get the mouse cursor and deproject down
-
-	FHitResult hit;
-	bool hasHit = playerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+	FHitResult hit{};
+	//Using custom trace channel for floor only
+	bool hasHit = playerController->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, true, hit);
 
 	if (hasHit) {
 		//Check if the mouse is far enough from previous location
