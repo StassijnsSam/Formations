@@ -14,12 +14,52 @@ ASpline::ASpline()
 	{
 		SetRootComponent(m_pSpline);
 	}
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset(TEXT("StaticMesh'/Game/Meshes/Cylinder.Cylinder'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Material(TEXT("MaterialInstanceConstant'/Game/Materials/MI_Spline.MI_Spline'"));
+	m_pMesh = MeshAsset.Object;
+	m_pMesh->SetMaterial(0, Material.Object);
 }
 
 // Called when the game starts or when spawned
 void ASpline::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void ASpline::AddMesh(int index)
+{
+	//If the index is 0, you cant make a mesh yet since you need two points
+	if (index == 0) {
+		return;
+	}
+	//If the mesh is not set, return
+	if (!m_pMesh) {
+		return;
+	}
+	
+	USplineMeshComponent* splineMesh = NewObject<USplineMeshComponent>(this, USplineMeshComponent::StaticClass());
+	splineMesh->SetStaticMesh(m_pMesh);
+	splineMesh->SetMaterial(0, m_pMesh->GetMaterial(0));
+	splineMesh->SetMobility(EComponentMobility::Movable);
+	splineMesh->CreationMethod = EComponentCreationMethod::UserConstructionScript;
+	splineMesh->RegisterComponentWithWorld(GetWorld());
+	splineMesh->AttachToComponent(m_pSpline, FAttachmentTransformRules::KeepRelativeTransform);
+
+	const FVector startPoint = m_pSpline->GetLocationAtSplinePoint(index -1, ESplineCoordinateSpace::World);
+	const FVector startTangent = m_pSpline->GetTangentAtSplinePoint(index -1, ESplineCoordinateSpace::World);
+
+	const FVector endPoint = m_pSpline->GetLocationAtSplinePoint(index, ESplineCoordinateSpace::World);
+	const FVector endTangent = m_pSpline->GetTangentAtSplinePoint(index, ESplineCoordinateSpace::World);
+
+	splineMesh->SetStartPosition(startPoint, true);
+	splineMesh->SetStartTangent(startTangent, true);
+	splineMesh->SetEndPosition(endPoint, true);
+	splineMesh->SetEndTangent(endTangent, true);
+	//turn of collision
+	splineMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//set forward access
+	splineMesh->SetForwardAxis(ESplineMeshAxis::Y, true);
 }
 
 // Called every frame
@@ -30,16 +70,12 @@ void ASpline::Tick(float DeltaTime)
 
 void ASpline::StartDrawing()
 {
-	GetWorldTimerManager().SetTimer(m_TimerHandle, this, &ASpline::AddSplinePoint, 0.2f, true, 0.0f);
+	GetWorldTimerManager().SetTimer(m_TimerHandle, this, &ASpline::AddSplinePoint, 0.05f, true, 0.0f);
 }
 
 void ASpline::StopDrawing()
 {
 	GetWorldTimerManager().ClearTimer(m_TimerHandle);
-}
-
-void ASpline::OnConstruction(const FTransform& Transform)
-{
 }
 
 void ASpline::AddSplinePoint()
@@ -56,6 +92,8 @@ void ASpline::AddSplinePoint()
 		FVector previousPointLocation = m_pSpline->GetLocationAtSplinePoint(m_pSpline->GetNumberOfSplinePoints(), ESplineCoordinateSpace::World);
 		if (FVector::Distance(previousPointLocation, hit.Location) > m_MinDistanceBetweenSplinePoints) {
 			m_pSpline->AddSplinePoint(hit.Location, ESplineCoordinateSpace::World, true);
+			//update the mesh
+			AddMesh(m_pSpline->GetNumberOfSplinePoints() - 1);
 		}
 	}
 }

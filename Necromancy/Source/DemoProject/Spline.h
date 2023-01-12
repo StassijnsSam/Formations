@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Components/SplineComponent.h"
+#include "Components/SplineMeshComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Spline.generated.h"
@@ -19,8 +20,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	virtual void OnConstruction(const FTransform& Transform) override;
+	void AddMesh(int index);
 	USplineComponent* m_pSpline;
+	UStaticMesh* m_pMesh;
 	FTimerHandle m_TimerHandle;
 	float m_MinDistanceBetweenSplinePoints{30.f};
 
