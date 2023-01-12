@@ -44,9 +44,7 @@ void ASpline::AddMesh(int index)
 	splineMesh->SetStaticMesh(m_pMesh);
 	splineMesh->SetMaterial(0, m_pMesh->GetMaterial(0));
 	splineMesh->SetMobility(EComponentMobility::Movable);
-	splineMesh->CreationMethod = EComponentCreationMethod::UserConstructionScript;
 	splineMesh->RegisterComponentWithWorld(GetWorld());
-	splineMesh->AttachToComponent(m_pSpline, FAttachmentTransformRules::KeepRelativeTransform);
 
 	const FVector startPoint = m_pSpline->GetLocationAtSplinePoint(index -1, ESplineCoordinateSpace::World);
 	const FVector startTangent = m_pSpline->GetTangentAtSplinePoint(index -1, ESplineCoordinateSpace::World);
@@ -62,6 +60,15 @@ void ASpline::AddMesh(int index)
 	splineMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//set forward access
 	splineMesh->SetForwardAxis(ESplineMeshAxis::X, true);
+	
+	//Update the previous splineMesh endtangent
+	auto children = m_pSpline->GetAttachChildren();
+	if (children.Num() > 0) {
+		auto lastMesh = Cast<USplineMeshComponent>(children.Last());
+		lastMesh->SetEndTangent(startTangent, true);
+	}
+	//Attach the current splinemesh
+	splineMesh->AttachToComponent(m_pSpline, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called every frame
@@ -78,12 +85,30 @@ void ASpline::StartDrawing()
 void ASpline::StopDrawing()
 {
 	GetWorldTimerManager().ClearTimer(m_TimerHandle);
+	//Check if the start and the end point are very close together, if so, make it a closed loop
+	if (FVector::Distance(m_pSpline->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::World), 
+		m_pSpline->GetLocationAtSplinePoint(m_pSpline->GetNumberOfSplinePoints(), ESplineCoordinateSpace::World)) < 100.f) {
+		m_pSpline->SetClosedLoop(true, true);
+		//Update the last splinemesh to connect it to the start
+		auto children = m_pSpline->GetAttachChildren();
+		if (children.Num() > 0) {
+			auto lastMesh = Cast<USplineMeshComponent>(children.Last());
+			auto firstmesh = Cast<USplineMeshComponent>(children[0]);
+			lastMesh->SetEndTangent(firstmesh->GetStartTangent(), true);
+			lastMesh->SetEndPosition(firstmesh->GetStartPosition(), true);
+		}
+	}
 }
 
 TArray<FVector> ASpline::GetPoinstAlongSpline(int amountOfActors)
 {
+	m_ActorLocations.Empty();
 	float totalLength = m_pSpline->GetSplineLength();
 	float distanceBetween = totalLength / float(amountOfActors - 1);
+	if (m_pSpline->IsClosedLoop()) {
+		//So the start and end dont coincide
+		distanceBetween = totalLength / float(amountOfActors);
+	}
 
 	float currentDistance{};
 	for (int i{}; i < amountOfActors; ++i) {
