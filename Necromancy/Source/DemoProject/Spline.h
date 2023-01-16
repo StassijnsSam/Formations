@@ -27,8 +27,10 @@ protected:
 	float m_MinDistanceBetweenSplinePoints{30.f};
 	float m_MinDistanceBetweenActorPoints{ 50.f };
 	TArray<FVector> m_ActorLocations{};
+	FVector m_LeaderLocation{};
 
 	void AddSplinePoint();
+	void CalculateLeaderLocation();
 
 public:	
 	// Called every frame
@@ -42,4 +44,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FVector> GetPoinstAlongSpline(int amountOfActors);
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetLeaderLocation();
 };

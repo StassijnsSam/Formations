@@ -84,10 +84,13 @@ void ASpline::StartDrawing()
 
 void ASpline::StopDrawing()
 {
+	//Clear the timer to add more points
 	GetWorldTimerManager().ClearTimer(m_TimerHandle);
+	//Already calculate the leader position
+	CalculateLeaderLocation();
 	//Check if the start and the end point are very close together, if so, make it a closed loop
 	if (FVector::Distance(m_pSpline->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::World), 
-		m_pSpline->GetLocationAtSplinePoint(m_pSpline->GetNumberOfSplinePoints(), ESplineCoordinateSpace::World)) < 100.f) {
+		m_pSpline->GetLocationAtSplinePoint(m_pSpline->GetNumberOfSplinePoints(), ESplineCoordinateSpace::World)) < 200.f) {
 		m_pSpline->SetClosedLoop(true, true);
 		//Update the last splinemesh to connect it to the start
 		auto children = m_pSpline->GetAttachChildren();
@@ -120,6 +123,12 @@ TArray<FVector> ASpline::GetPoinstAlongSpline(int amountOfActors)
 	return m_ActorLocations;
 }
 
+FVector ASpline::GetLeaderLocation()
+{
+	CalculateLeaderLocation();
+	return m_LeaderLocation;
+}
+
 void ASpline::AddSplinePoint()
 {
 	auto playerController = GetWorld()->GetFirstPlayerController();
@@ -136,5 +145,16 @@ void ASpline::AddSplinePoint()
 			AddMesh(m_pSpline->GetNumberOfSplinePoints() - 1);
 		}
 	}
+}
+
+void ASpline::CalculateLeaderLocation()
+{
+	//To get the middle we need the min and max location in x and y
+	FVector min{};
+	FVector max{};
+	auto curveVector = m_pSpline->GetSplinePointsPosition();
+	curveVector.CalcBounds(min, max);
+
+	m_LeaderLocation = this->GetActorLocation() + (min + max) / 2.f;
 }
 
