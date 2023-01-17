@@ -22,6 +22,7 @@ protected:
 	virtual void BeginPlay() override;
 	void AddMesh(int index);
 	USplineComponent* m_pSpline;
+	USceneComponent* m_pRoot;
 	UStaticMesh* m_pMesh;
 	FTimerHandle m_TimerHandle;
 	float m_MinDistanceBetweenSplinePoints{30.f};
@@ -31,6 +32,7 @@ protected:
 
 	void AddSplinePoint();
 	void CalculateLeaderLocation();
+	void RedrawSplineMeshes();
 
 public:	
 	// Called every frame
