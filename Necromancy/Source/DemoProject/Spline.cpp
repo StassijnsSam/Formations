@@ -117,7 +117,7 @@ void ASpline::StopDrawing()
 TArray<FVector> ASpline::GetPoinstAlongSpline(int amountOfActors)
 {
 	m_ActorLocations.Empty();
-	float minDistanceBetween{ 120.f };
+	float minDistanceBetween{ 125.f };
 
 	//If the amount of actors is invalid or 0 just return the leaderlocation
 	if (amountOfActors <= 0) {
