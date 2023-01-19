@@ -17,8 +17,8 @@ The initial project itself includes a small tutorial.
 **Left mouse** - Click to target  
 
 ## Focus
-Initially I wanted to focus this project on adding only a couple of formations and programming flocking and group movement with A* pathfinding on a navmesh.  
-Through my research I quickly found out that formations on their own are not that interesting, since you have to add all the different shapes manually.  
+Initially I wanted to focus this project on adding a couple of formations and programming flocking and group movement with A* pathfinding on a navmesh.  
+Through my research I quickly found out that formations on their own are less interesting than I thought, since you have to add all the different shapes manually.  
 This is where my focus shifted to creating a way to draw any formation that you want.  
 Drawable formations have not been researched a lot, so I found it interesting to give my take on the subject.
 
@@ -26,12 +26,12 @@ Drawable formations have not been researched a lot, so I found it interesting to
 In this part I will go over the biggest obstacles I faced and how I solved them.
 
 ## How to draw a formation in real time?
-In Unreal Engine there are different ways to "paint" by using shaders. I however need an actual path that I can save and do calculations on.
+In Unreal Engine there are different ways to "paint" by using shaders. But, I need an actual path that I can save and do calculations on.
 
 I landed on using splines.  
 Essentially a spline is a collection of points in the world that get connected.
 
-I added an input key, as long as the player is pressing 'F' (for Formation). You will be drawing.  
+I added an input key. As long as the player is pressing 'F' (for Formation), you will be drawing.  
 When you start drawing a Timer starts that will add a new point every 0.1 seconds. This timer handle is saved to later be able to stop it.
 
 ```
@@ -41,7 +41,7 @@ void ASpline::StartDrawing()
 }
 ```
 
-To add a spline point, we check where the cursor currently is and project this down to get the location in the world.  
+To add a spline point, we check where the cursor currently is and project the cursor down to get the location in the world.  
 To make sure this spline will be drawn on the floor of the level, I added a custom trace channel so only hits with the floor will be taken into account.  
 I added a minimum distance between spline points, so if you dont move much the spline will not be made out of a bunch of points that are bunched up together.
 
@@ -76,7 +76,7 @@ void ASpline::StopDrawing()
 This code already allows to draw the spline in real time, but I also wanted to make sure the spline is visible ingame. To do this I added splinemesh components.  
 Addmesh now will be called every time after adding a point, with the index of the point that was currently added!
 
-For the splinemesh to work correctly it is very important that both the start and end location and tangents are set. Since we draw the pieces one by one,
+For the splinemesh to work correctly it is essential that both the start and end location and tangents are set. Since we draw the pieces one by one,
 it is important we update the previous segment's end tangent when a new segment is drawn.  
 After that we attach the component to the spline.
 
@@ -226,6 +226,9 @@ if (distanceBetween < minDistanceBetween) {
 		RedrawSplineMeshes();
 	}
   ```
+
+![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/Scale.gif)
+
 Part 2 is now complete. We turned our spline into an actual formation. This formation will work with both closed and not closed splines and will scale up when the drawn spline is too small.  
 
 ## Where to put the formation leader?
@@ -235,7 +238,7 @@ We could choose between a random unit, an actually important unit or using a vir
 I chose to go with a virtual leader. This means the leader is not actually a unit but the center of the formation.  
 Later on this can also be used to make it look like the important unit is the leader by making their locations coincide.  
 
-ADD GIF
+![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/Leader.gif)
 
 We can again use a spline function to help us calculate the location of our virtual leader.  
   ```
