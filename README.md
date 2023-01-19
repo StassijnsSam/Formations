@@ -3,7 +3,7 @@
 Research project in Unreal Engine 4.27 about real time drawable AI Formations for Gameplay Programming. Integrated into a small RTS-style Necromancy game.
 
 ## Result
-![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/FormationsFullGameplay.gif)
+![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/FullGame.gif)
 
 ## Initial project
 This research is integreated into a small RTS-style project, made with Blueprints in Unreal Engine 4.27. You are a Necromancer and can raise dead bodies as zombies. You then control these zombies by clicking on a location, enemy, or yourself.
@@ -261,15 +261,16 @@ In Blueprints we implement two parts.
 ### 1. Clicking on a location
 Whenever you click on a location, move the formation there and tell the zombies to move to the formation locations.
 
-ADD IMAGE
-ADD IMAGE
+![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/MoveZombiesToFormation.gif)
 
 ### 2. Clicking on the player
 When you click on the player, the formation gets centered on them but also gets attached.  
 
-ADD IMAGE
+![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/MoveZombiesWithActor.gif)
 
 Whenever the player moves, tell the zombies to move to the formation locations.
+
+![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/Moving.gif)
 
 This is a very rudimentary implementation to show the potential of this research.
 
