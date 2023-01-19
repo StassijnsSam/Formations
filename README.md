@@ -9,12 +9,12 @@ Research project in Unreal Engine 4.27 about real time drawable AI Formations fo
 This research is integreated into a small RTS-style project, made with Blueprints in Unreal Engine 4.27. You are a Necromancer and can raise dead bodies as zombies. You then control these zombies by clicking on a location, enemy, or yourself.
 The initial project itself includes a small tutorial.
 ### Controls
-WASD - Move the Necromancer  
-R - Raise a dead body as a zombie  
-T - "Trade life"  When an enemy is selected use some of your health to send a ray that does 100 damage.  
-                  When a zombie is selected, absorb the magic in the zombie to heal, the zombie gets destroyed  
-Right mouse - Click and hold to use RTS style selection  
-Left mouse - Click to target  
+*WASD* - Move the Necromancer  
+*R* - Raise a dead body as a zombie  
+*T* - "Trade life"  When an enemy is selected use some of your health to send a ray that does 100 damage.  
+*T* - "Trade life "When a zombie is selected, absorb the magic in the zombie to heal, the zombie gets destroyed  
+*Right mouse* - Click and hold to use RTS style selection  
+*Left mouse* - Click to target  
 
 ## Focus
 Initially I wanted to focus this project on adding only a couple of formations and programming flocking and group movement with A* pathfinding on a navmesh.  
@@ -76,7 +76,7 @@ void ASpline::StopDrawing()
 This code already allows to draw the spline in real time, but I also wanted to make sure the spline is visible ingame. To do this I added splinemesh components.  
 Addmesh now will be called every time after adding a point, with the index of the point that was currently added!
 
-For the splinemesh to work correctly it is very important both the start and end location and tangents are set. Since we draw the pieces one by one,
+For the splinemesh to work correctly it is very important that both the start and end location and tangents are set. Since we draw the pieces one by one,
 it is important we update the previous segment's end tangent when a new segment is drawn.  
 After that we attach the component to the spline.
 
@@ -133,12 +133,12 @@ Now we want to use this spline to create formations.
 The basics of this question are very simple.  
 In Unreal Engine there are several functions on spline components that can help us with calculations.
 
-We get the distance between points and use a function on spline to get the location at a certain distance along the spline. This way we get all the points we need!  
+We get the distance between points and use a function on the spline to get the location at a certain distance along the spline. This way we get all the points we need!  
 ```
 TArray<FVector> ASpline::GetPoinstAlongSpline(int amountOfActors)
 {
 	//Clear the actorlocations
-  m_ActorLocations.Empty();
+  	m_ActorLocations.Empty();
 
 	//If the amount of actors is invalid or 0 just return empty
 	if (amountOfActors <= 0) {
@@ -167,7 +167,8 @@ But here are the issues.
 Sometimes you want to draw a formation that is closed, like a circle or a square. Currently, the formation does not get closed and this gives us problems when trying to fit units on it.  
 This is a big problem because both the start and endpoint will be given as locations to fit an actor, but if you drew a closed formations these points will overlap.
 
-ADD GIFS
+![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/Line.gif)
+![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/SquareBad.gif)
 
 To fix this, I added a check when you stop drawing to see if your formation is closed or not.  
 We do this by checking the distance between the first and the last point, while also making sure the formation itself is long enough.  
@@ -200,13 +201,13 @@ float distanceBetween = totalLength / float(amountOfActors - 1);
 	}
 ```
 
-ADD GIF
+![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/SquareGood.gif)
 
 This fixes our issue with closed formations.
 
 ### Formation size
 I wanted to give the player full freedom. This means that any formation being drawn will be used regardless of size.  
-When a formation is very big, that is not a problem. But when it is too small to fit all the units, the units will bunch of and try to push each other out of the way.  
+When a formation is very big, that is not a problem. But when it is too small to fit all the units, the units will bunch up and try to push each other out of the way.  
 To make this fully work I want to scale formations that are too small untill all the units can fit.  
 
 In essence this is again very simple. We calculate the needed scalefactor and apply it to the spline. This will warp our meshes though, so we will redraw them so they still look normal.  
@@ -270,23 +271,23 @@ Whenever the player moves, tell the zombies to move to the formation locations.
 This is a very rudimentary implementation to show the potential of this research.
 
 # Improvements
-** 1. Reworking Blueprints to C++
+## 1. Reworking Blueprints to C++
 The movement logic of the units is currently done with Blueprints. I would like to update them to work fully with A* pathfinding as well as some flocking.  
 Since I have already implemented these things in projects throughout the year, this would be the first thing I would add.
 
-** 2. Formation movement logic
+## 2. Formation movement logic
 While doing research I came accross a lot of the issues regular formations have that would also apply to this project.
 
-*** 2.1 Staying together when going around obstacles
+### 2.1 Staying together when going around obstacles
 It is possible the group splits when moving around an obstacle because of the pathing algorithm. In general though you would want your group to stay together and take the same path.
 
-*** 2.2 Letting other units pass
+### 2.2 Letting other units pass
 Sometimes units gets stuck on each other. By implementing a form of flocking, they would avoid each other enough for that not to happen.
 
-*** 3. Groups
+### 3. Groups
 Currently, you can only have one formation at a time. I am already working on adding groups and a group manager, so you can group up units and keep those groups in different formations as well. By combining those groups you would be able to make very advanced formations.
 
-* Conclusion
+# Conclusion
 I am very happy with what I have been able to achieve.  
 There was no real research or implementations of drawable formations that I have found online, which gives me the feeling I was able to do something more unique. This also made it so a lot of this project was trial and error with minor changes.  
 I am planning on adding to this project in the future.
