@@ -301,6 +301,6 @@ I am planning on adding to this project in the future.
 [Splines in Unreal Engine](http://jollymonsterstudio.com/2020/05/13/unreal-engine-c-fundamentals-using-spline-components/)
 
 ## Sources for future use
-[Implementing coordinated movement](https://www.gamedeveloper.com/programming/implementing-coordinated-movement)
-[Coordinated movement](http://www.jeremiahwarm.com/CoordinatedMovement.php)
-[RTS group movement](https://sandruski.github.io/RTS-Group-Movement/)
+[Implementing coordinated movement](https://www.gamedeveloper.com/programming/implementing-coordinated-movement)  
+[Coordinated movement](http://www.jeremiahwarm.com/CoordinatedMovement.php)  
+[RTS group movement](https://sandruski.github.io/RTS-Group-Movement/)  
