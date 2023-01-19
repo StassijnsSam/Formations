@@ -83,7 +83,7 @@ void ASpline::Tick(float DeltaTime)
 
 void ASpline::StartDrawing()
 {
-	GetWorldTimerManager().SetTimer(m_TimerHandle, this, &ASpline::AddSplinePoint, 0.05f, true, 0.0f);
+	GetWorldTimerManager().SetTimer(m_TimerHandle, this, &ASpline::AddSplinePoint, 0.1f, true, 0.0f);
 }
 
 void ASpline::StopDrawing()

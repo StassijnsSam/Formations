@@ -25,8 +25,7 @@ protected:
 	USceneComponent* m_pRoot;
 	UStaticMesh* m_pMesh;
 	FTimerHandle m_TimerHandle;
-	float m_MinDistanceBetweenSplinePoints{30.f};
-	float m_MinDistanceBetweenActorPoints{ 50.f };
+	float m_MinDistanceBetweenSplinePoints{20.f};
 	TArray<FVector> m_ActorLocations{};
 	FVector m_LeaderLocation{};
 
