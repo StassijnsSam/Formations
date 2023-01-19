@@ -251,3 +251,42 @@ void ASpline::CalculateLeaderLocation()
   ```
 
 ## How to move the formation?
+The movement logic for the player and the zombies are in Blueprints because of the starting project. To be able to finish this research I decided to do this logic in Blueprints as well.
+
+In Blueprints we implement two parts.
+### 1. Clicking on a location
+Whenever you click on a location, move the formation there and tell the zombies to move to the formation locations.
+
+ADD IMAGE
+ADD IMAGE
+
+### 2. Clicking on the player
+When you click on the player, the formation gets centered on them but also gets attached.  
+
+ADD IMAGE
+
+Whenever the player moves, tell the zombies to move to the formation locations.
+
+This is a very rudimentary implementation to show the potential of this research.
+
+# Improvements
+** 1. Reworking Blueprints to C++
+The movement logic of the units is currently done with Blueprints. I would like to update them to work fully with A* pathfinding as well as some flocking.  
+Since I have already implemented these things in projects throughout the year, this would be the first thing I would add.
+
+** 2. Formation movement logic
+While doing research I came accross a lot of the issues regular formations have that would also apply to this project.
+
+*** 2.1 Staying together when going around obstacles
+It is possible the group splits when moving around an obstacle because of the pathing algorithm. In general though you would want your group to stay together and take the same path.
+
+*** 2.2 Letting other units pass
+Sometimes units gets stuck on each other. By implementing a form of flocking, they would avoid each other enough for that not to happen.
+
+*** 3. Groups
+Currently, you can only have one formation at a time. I am already working on adding groups and a group manager, so you can group up units and keep those groups in different formations as well. By combining those groups you would be able to make very advanced formations.
+
+* Conclusion
+I am very happy with what I have been able to achieve.  
+There was no real research or implementations of drawable formations that I have found online, which gives me the feeling I was able to do something more unique. This also made it so a lot of this project was trial and error with minor changes.  
+I am planning on adding to this project in the future.
