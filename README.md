@@ -17,22 +17,22 @@ The initial project itself includes a small tutorial.
 **Left mouse** - Click to target  
 
 ## Focus
-Initially I wanted to focus this project on adding a couple of formations and programming flocking and group movement with A* pathfinding on a navmesh.  
-Through my research I quickly found out that formations on their own are less interesting than I thought, since you have to add all the different shapes manually.  
-This is where my focus shifted to creating a way to draw any formation that you want.  
-Drawable formations have not been researched a lot, so I found it interesting to give my take on the subject.
+During this project, I initially wanted to focus on adding a couple of formations, programming flocking and group movement with A* pathfinding on a navmesh.  
+While I was researching,  I discovered that formations on their own are not as interesting as I thought, since you have to add all the different shapes manually.  
+That is why I decided to shift my focus and I chose to create a way to draw any formation you want in realtime.  
+There is not much research on drawable formations. So I believed it would be quite interesting to explore this subject.  
 
 # Research
-In this part I will go over the biggest obstacles I faced and how I solved them.
+This part will discuss the challenges I faced and how I solved them.
 
 ## How to draw a formation in real time?
-In Unreal Engine there are different ways to "paint" by using shaders. But, I need an actual path that I can save and do calculations on.
+In Unreal Engine there are different ways to "paint" by using shaders, but I need an actual path that I can save in order to perform the necessary calculations.
 
 I landed on using splines.  
 Essentially a spline is a collection of points in the world that get connected.
 
-I added an input key. As long as the player is pressing 'F' (for Formation), you will be drawing.  
-When you start drawing a Timer starts that will add a new point every 0.1 seconds. This timer handle is saved to later be able to stop it.
+I added an input key. As long as the player is pressing 'F' (for Formation), he/she will be able to draw.    
+Once the player starts drawing, a Timer will start running. This Timer will add a new point every 0.1 seconds and the Timer handle is saved so it can be stopped later.   
 
 ```
 void ASpline::StartDrawing()
@@ -42,8 +42,8 @@ void ASpline::StartDrawing()
 ```
 
 To add a spline point, we check where the cursor currently is and project the cursor down to get the location in the world.  
-To make sure this spline will be drawn on the floor of the level, I added a custom trace channel so only hits with the floor will be taken into account.  
-I added a minimum distance between spline points, so if you dont move much the spline will not be made out of a bunch of points that are bunched up together.
+I also added a custom trace channel so only hits with the floor will be taken into account. By doing so, I could make sure the spline will be drawn on the floor of the level.  
+I added a minimum distance between spline points, so if you dont move much the spline will not be made out of a bunch of points that are grouped up together.
 
 ```
 void ASpline::AddSplinePoint()
@@ -73,11 +73,11 @@ void ASpline::StopDrawing()
 }
 ```
 
-This code already allows to draw the spline in real time, but I also wanted to make sure the spline is visible ingame. To do this I added splinemesh components.  
-Addmesh now will be called every time after adding a point, with the index of the point that was currently added!
+This code already allows to draw the spline in real time, but I also wanted to make sure the spline is visible ingame. That is where my splinemesh components come in.  
+Every time a new point gets added, the function Addmesh will now be called with the index of the point that was currently added!
 
-For the splinemesh to work correctly it is essential that both the start and end location and tangents are set. Since we draw the pieces one by one,
-it is important we update the previous segment's end tangent when a new segment is drawn.  
+In order for the full splinemesh to work correctly, it is vital that both the start and end location and tangents are set. Since we draw the pieces one by one,
+it is essential we update the previous segment's end tangent when a new segment is drawn.  
 After that we attach the component to the spline.
 
 ```
@@ -126,8 +126,10 @@ void ASpline::AddMesh(int index)
 ```
 ![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/Draw.gif)
 
-Part 1 is now complete. We have a spline that can be drawn real time as long as you hold a button. Spline mesh components will be added one by one making the spline visible.
-Now we want to use this spline to create formations.
+This concludes the first part.  
+At this point, we have a spline that can be drawn in real time as long as you hold a button and spline mesh components will be added one by one making the spline visible.  
+
+Now we move on to the next part, where we want to use this spline to create formations.
 
 ## How to turn a spline into a formation?
 The basics of this question are very simple.  
@@ -229,14 +231,15 @@ if (distanceBetween < minDistanceBetween) {
 
 ![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/Scale.gif)
 
-Part 2 is now complete. We turned our spline into an actual formation. This formation will work with both closed and not closed splines and will scale up when the drawn spline is too small.  
+This concludes the second part.  
+We turned our spline into an actual formation. This formation will work with both closed and not closed splines and will scale up when the drawn spline is too small.  
 
 ## Where to put the formation leader?
-Every formation has a leader that is the pivot of the formation. The choice of leader is very important later on.  
-We could choose between a random unit, an actually important unit or using a virtual leader.
+Every formation has a leader that is the pivot of the formation. The choice of leader is very important for the movement of the formation, especially for rotations.  
+The options we can choose from are a random unit, a unit that is actually important or a virtual leader.
 
-I chose to go with a virtual leader. This means the leader is not actually a unit but the center of the formation.  
-Later on this can also be used to make it look like the important unit is the leader by making their locations coincide.  
+I opted for a virtual leader. This means the leader is not actually a unit but the center of the formation.  
+Later on this can also be used to make it look like the important unit is the leader by giving them the same location.  
 
 ![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/Leader.gif)
 
@@ -253,10 +256,10 @@ void ASpline::CalculateLeaderLocation()
 	m_LeaderLocation = (min + max) / 2.f;
 }
   ```
-This leader location is also where the origin of our spline actor should be. Then, when we scale it up, the scale will be uniform and the leader location will stay the same.
+This leader's location is also where the origin of our spline actor should be. When we scale it up, the scale will then be uniform and the leader's location will stay the same.
 
 ## How to move the formation?
-The movement logic for the player and the zombies are in Blueprints because of the starting project. To be able to finish this research I decided to do this logic in Blueprints as well.
+Because of the starting project, the movement logic for the player and the zombies are in Blueprints. To be able to finish this research I decided to do this logic in Blueprints as well.
 
 In Blueprints we implement two parts.
 ### 1. Clicking on a location
@@ -265,7 +268,7 @@ Whenever you click on a location, move the formation there and tell the zombies 
 ![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/MoveZombiesToFormation.gif)
 
 ### 2. Clicking on the player
-When you click on the player, the formation gets centered on them but also gets attached.  
+Whenever you click on the player, the formation not only gets centered on them, but it also gets attached to them.  
 
 ![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/MoveZombiesWithActor.gif)
 
@@ -277,11 +280,11 @@ This is a very rudimentary implementation to show the potential of this research
 
 # Improvements
 ## 1. Reworking Blueprints to C++
-The movement logic of the units is currently done with Blueprints. I would like to update them to work fully with A* pathfinding as well as some flocking.  
-Since I have already implemented these things in projects throughout the year, this would be the first thing I would add.
+The movement logic of the units is currently done with Blueprints. I would like to update them so that they completely work with A* pathfinding as well as some flocking.  
+Since I already implemented these things in projects throughout the year, this would be the first thing I would add.
 
 ## 2. Formation movement logic
-While doing research I came accross a lot of the issues regular formations have that would also apply to this project.
+While doing research I came across a lot of the issues regular formations have that would also apply to this project.
 
 ### 2.1 Staying together when going around obstacles
 It is possible the group splits when moving around an obstacle because of the pathing algorithm. In general though you would want your group to stay together and take the same path.
@@ -294,8 +297,8 @@ Currently, you can only have one formation at a time. I am already working on ad
 
 # Conclusion
 I am very happy with what I have been able to achieve.  
-There was no real research or implementations of drawable formations that I have found online, which gives me the feeling I was able to do something more unique. This also made it so a lot of this project was trial and error with minor changes.  
-I am planning on adding to this project in the future.
+As there wasn't any real research on ,or implementations of, drawable formations that I could find online, I have the feeling I was able to do something more unique. As a result, there was much trial and error involved in this project.  
+I am planning to keep working on this project in the future.
 
 # Sources
 [Splines in Unreal Engine](http://jollymonsterstudio.com/2020/05/13/unreal-engine-c-fundamentals-using-spline-components/)
