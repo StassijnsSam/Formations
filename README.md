@@ -253,6 +253,7 @@ void ASpline::CalculateLeaderLocation()
 	m_LeaderLocation = (min + max) / 2.f;
 }
   ```
+This leader location is also where the origin of our spline actor should be. Then, when we scale it up, the scale will be uniform and the leader location will stay the same.
 
 ## How to move the formation?
 The movement logic for the player and the zombies are in Blueprints because of the starting project. To be able to finish this research I decided to do this logic in Blueprints as well.
