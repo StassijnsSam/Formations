@@ -9,12 +9,12 @@ Research project in Unreal Engine 4.27 about real time drawable AI Formations fo
 This research is integreated into a small RTS-style project, made with Blueprints in Unreal Engine 4.27. You are a Necromancer and can raise dead bodies as zombies. You then control these zombies by clicking on a location, enemy, or yourself.
 The initial project itself includes a small tutorial.
 ### Controls
-WASD - Move the Necromancer
-R - Raise a dead body as a zombie
-T - "Trade life"  When an enemy is selected use some of your health to send a ray that does 100 damage.
-                  When a zombie is selected, absorb the magic in the zombie to heal, the zombie gets destroyed
-Right mouse - Click and hold to use RTS style selection
-Left mouse - Click to target
+WASD - Move the Necromancer__
+R - Raise a dead body as a zombie__
+T - "Trade life"  When an enemy is selected use some of your health to send a ray that does 100 damage.__
+                  When a zombie is selected, absorb the magic in the zombie to heal, the zombie gets destroyed__
+Right mouse - Click and hold to use RTS style selection__
+Left mouse - Click to target__
 
 ## Focus
 Initially I wanted to focus this project on adding only a couple of formations and programming flocking and group movement with A* pathfinding on a navmesh.
