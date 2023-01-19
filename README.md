@@ -296,3 +296,11 @@ Currently, you can only have one formation at a time. I am already working on ad
 I am very happy with what I have been able to achieve.  
 There was no real research or implementations of drawable formations that I have found online, which gives me the feeling I was able to do something more unique. This also made it so a lot of this project was trial and error with minor changes.  
 I am planning on adding to this project in the future.
+
+# Sources
+[Splines in Unreal Engine](http://jollymonsterstudio.com/2020/05/13/unreal-engine-c-fundamentals-using-spline-components/)
+
+## Sources for future use
+[Implementing coordinated movement](https://www.gamedeveloper.com/programming/implementing-coordinated-movement)
+[Coordinated movement](http://www.jeremiahwarm.com/CoordinatedMovement.php)
+[RTS group movement](https://sandruski.github.io/RTS-Group-Movement/)
