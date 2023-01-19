@@ -6,7 +6,7 @@ Research project in Unreal Engine 4.27 about real time drawable AI Formations fo
 ![](https://github.com/StassijnsSam/Formations/blob/main/GIFs/FullGame2.gif)
 
 ## Initial project
-This research is integreated into a small RTS-style project, made with Blueprints in Unreal Engine 4.27. You are a Necromancer and can raise dead bodies as zombies. You then control these zombies by clicking on a location, enemy, or yourself.
+This research is integrated into a small RTS-style project, made with Blueprints in Unreal Engine 4.27. You are a Necromancer and can raise dead bodies as zombies. You then control these zombies by clicking on a location, enemy, or yourself.
 The initial project itself includes a small tutorial.
 ### Controls
 **WASD** - Move the Necromancer  
